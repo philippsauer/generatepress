@@ -44,6 +44,16 @@ if ( ! function_exists( 'generate_construct_header' ) ) {
 				?>
 			</div>
 		</header>
+
+		<!-- rankmath breadcrumbs -->
+		<?php if (function_exists('rank_math_the_breadcrumbs')) : ?>
+			<div class="site grid-container container">
+				<div class="breadcrumbs-container clearfix">
+					<?php rank_math_the_breadcrumbs(); ?>
+				</div>
+			</div>
+		<?php endif; ?>
+		
 		<?php
 	}
 }

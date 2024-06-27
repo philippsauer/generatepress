@@ -76,13 +76,9 @@ if ( ! function_exists( 'generate_add_footer_info' ) ) {
 	 */
 	function generate_add_footer_info() {
 		$copyright = sprintf(
-			'<span class="copyright">&copy; %1$s %2$s</span> &bull; %4$s <a href="%3$s"%6$s>%5$s</a>',
+			'<span class="copyright">&copy; %1$s %2$s</span>',// &bull; %4$s <a href="%3$s"%6$s>%5$s</a>',
 			date( 'Y' ), // phpcs:ignore
-			get_bloginfo( 'name' ),
-			esc_url( 'https://generatepress.com' ),
-			_x( 'Built with', 'GeneratePress', 'generatepress' ),
-			__( 'GeneratePress', 'generatepress' ),
-			'microdata' === generate_get_schema_type() ? ' itemprop="url"' : ''
+			get_bloginfo( 'name' )
 		);
 
 		echo apply_filters( 'generate_copyright', $copyright ); // phpcs:ignore

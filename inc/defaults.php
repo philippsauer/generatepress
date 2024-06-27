@@ -49,7 +49,7 @@ if ( ! function_exists( 'generate_get_defaults' ) ) {
 				'post_content' => 'excerpt',
 				'footer_layout_setting' => 'fluid-footer',
 				'footer_inner_width' => 'contained',
-				'footer_widget_setting' => '3',
+				'footer_widget_setting' => '4',
 				'footer_bar_alignment' => 'right',
 				'back_to_top' => '',
 				'background_color' => 'var(--base-2)',

@@ -124,7 +124,8 @@ if ( ! function_exists( 'generate_featured_page_header_inside_single' ) ) {
 		}
 
 		if ( is_single() ) {
-			generate_featured_page_header_area( 'page-header-image-single' );
+			// don't show header image in post pages
+			//generate_featured_page_header_area( 'page-header-image-single' );
 		}
 	}
 }

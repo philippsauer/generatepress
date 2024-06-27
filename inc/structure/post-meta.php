@@ -158,7 +158,7 @@ if ( ! function_exists( 'generate_modify_posts_pagination_template' ) ) {
  * @param string $item The post meta item we're requesting.
  */
 function generate_do_post_meta_item( $item ) {
-	if ( 'date' === $item ) {
+	if ( 'date-published' === $item ) {
 		$time_string = '<time class="entry-date published" datetime="%1$s"%5$s>%2$s</time>';
 
 		$updated_time = get_the_modified_time( 'U' );
@@ -200,6 +200,39 @@ function generate_do_post_meta_item( $item ) {
 			),
 			$time_string,
 			$posted_on
+		);
+	}
+
+	if ( 'date-modified' === $item ) {
+		$updated_time = get_the_modified_time( 'U' );
+		$published_time = get_the_time( 'U' ) + 1800;
+		$schema_type = generate_get_schema_type();
+		$time_string = '<time class="entry-date updated-date" datetime="%3$s"%6$s>%4$s</time>';
+		$time_string = sprintf(
+			$time_string,
+			esc_attr( get_the_date( 'c' ) ),
+			esc_html( get_the_date() ),
+			esc_attr( get_the_modified_date( 'c' ) ),
+			esc_html( get_the_modified_date() ),
+			'microdata' === $schema_type ? ' itemprop="datePublished"' : '',
+			'microdata' === $schema_type ? ' itemprop="dateModified"' : ''
+		);
+
+		$modified_on = '<span class="modified-on">%5$s Letztes Update am %1$s%4$s</span> '; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped in function.
+
+		echo apply_filters( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			'generate_post_date_output',
+			sprintf(
+				$modified_on,
+				apply_filters( 'generate_inside_post_meta_item_output', '', 'date' ),
+				esc_url( get_permalink() ),
+				esc_attr( get_the_modified_time( 'U' ) ),
+				$time_string,
+				generate_get_svg_icon( 'calendar' ) // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped in function.
+
+			),
+			$time_string,
+			$modified_on
 		);
 	}
 
@@ -280,6 +313,53 @@ function generate_do_post_meta_item( $item ) {
 		generate_content_nav( 'nav-below' );
 	}
 
+	if ( 'eb-categories-plus-tags' === $item ) {
+		$term_separator = apply_filters( 'generate_term_separator', _x( ' ', 'Used between list items, there is a space after the comma.', 'generatepress' ), 'categories-plus-tags' );
+
+		// Get tags and categories.
+		$tag_list = get_the_tag_list( '', $term_separator );
+		$tag_list .= $term_separator;
+		$tag_list .= get_the_category_list( $term_separator );
+
+		if ( $tag_list ) {
+			echo apply_filters( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+				'generate_category_tag_list_output',
+				sprintf(
+					'<p class="comment-reply-title">%3$s<b>Mehr zum Thema</b></p><div class="cat-links meta-tags clearfix"><span class="screen-reader-text">%1$s</span>%2$s</div> ',
+					esc_html_x( 'Themenbereiche', 'Used before category names.', 'generatepress' ),
+					$tag_list,
+					apply_filters( 'generate_inside_post_meta_item_output', '', 'tags' )
+				)
+			);
+		}
+	}
+
+	if ( 'eb-author-bio' === $item ) {
+		$schema_type = generate_get_schema_type();
+
+		$byline = '<span class="byline">%1$s<span class="author%8$s" %5$s><a class="url fn n" href="%2$s" title="%3$s" rel="author"%6$s><span class="author-name"%7$s>%4$s</span></a></span></span> ';
+
+		if ( ! apply_filters( 'generate_post_author_link', true ) ) {
+			$byline = '<span class="byline">%1$s<span class="author%8$s" %5$s><span class="author-name"%7$s>%4$s</span></span></span> ';
+		}
+		?>
+		<div class="entry-author clearfix">
+			<div class="author-heading">
+				<p class="author-title"><?php printf(apply_filters( 'generate_inside_post_meta_item_output', '', 'author-icon' )); printf( esc_html__( 'Über den Autor', 'generatepress' ), '<span class="author-name">' . get_the_author() . '</span>' ); ?></p>
+				<a class="author-link" href="<?php echo esc_url( get_author_posts_url( get_the_author_meta( 'ID' ) ) ); ?>" rel="author">
+					<?php esc_html_e( 'Alle Beiträge ansehen', 'generatepress' ); ?>
+				</a>
+			</div>
+			<div class="author-avatar">
+			<?php echo get_avatar( get_the_author_meta( 'ID' ), 96 ); ?>
+			</div>
+			<p class="author-bio">
+				<?php the_author_meta( 'description' ); ?>
+			</p>
+		</div>
+		<?php
+	}
+
 	/**
 	 * generate_post_meta_items hook.
 	 *
@@ -299,6 +379,10 @@ add_filter( 'generate_inside_post_meta_item_output', 'generate_do_post_meta_pref
 function generate_do_post_meta_prefix( $output, $item ) {
 	if ( 'author' === $item ) {
 		$output = __( 'by', 'generatepress' ) . ' ';
+	}
+
+	if ( 'author-icon' === $item ) {
+		$output = generate_get_svg_icon( 'author' );
 	}
 
 	if ( 'categories' === $item ) {
@@ -360,10 +444,20 @@ function generate_get_header_entry_meta_items() {
 	$items = apply_filters(
 		'generate_header_entry_meta_items',
 		array(
-			'date',
+			'date-modified',
 			'author',
 		)
 	);
+
+	if ( ! is_singular() ) {
+		$items = apply_filters(
+			'generate_header_entry_meta_items',
+			array(
+				'date-published',
+				'author',
+			)
+		);
+	}
 
 	// Disable post meta items based on their individual filters.
 	$items = generate_disable_post_meta_items( $items );
@@ -380,10 +474,12 @@ function generate_get_footer_entry_meta_items() {
 	$items = apply_filters(
 		'generate_footer_entry_meta_items',
 		array(
-			'categories',
-			'tags',
+			//'categories',
+			//'tags',
+			'eb-categories-plus-tags',
+			'eb-author-bio',
 			'comments-link',
-			'post-navigation',
+			//'post-navigation',
 		)
 	);
 
@@ -397,7 +493,14 @@ function generate_get_footer_entry_meta_items() {
 	}
 
 	if ( ! is_singular() ) {
-		$items = array_diff( (array) $items, array( 'post-navigation' ) );
+		//$items = array_diff( (array) $items, array( 'post-navigation' ) );
+		$items = apply_filters(
+			'generate_footer_entry_meta_items',
+			array(
+				'categories',
+				'tags',
+			)
+		);
 	}
 
 	// Disable post meta items based on their individual filters.
