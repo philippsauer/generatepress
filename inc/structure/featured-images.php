@@ -10,7 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 if ( ! function_exists( 'generate_post_image' ) ) {
-	add_action( 'generate_after_entry_header', 'generate_post_image' );
+	add_action( 'generate_before_content', 'generate_post_image' );
 	/**
 	 * Prints the Post Image to post excerpts
 	 */

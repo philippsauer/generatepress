@@ -386,7 +386,7 @@ function generate_do_post_meta_prefix( $output, $item ) {
 	}
 
 	if ( 'categories' === $item ) {
-		$output = generate_get_svg_icon( 'categories' );
+		$output = generate_get_svg_icon( 'position' );
 	}
 
 	if ( 'tags' === $item ) {
@@ -446,6 +446,7 @@ function generate_get_header_entry_meta_items() {
 		array(
 			'date-modified',
 			'author',
+			'categories',
 		)
 	);
 
