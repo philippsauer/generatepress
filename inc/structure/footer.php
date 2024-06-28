@@ -230,3 +230,22 @@ if ( ! function_exists( 'generate_back_to_top' ) ) {
 		);
 	}
 }
+
+if ( ! function_exists( 'generate_before_footer_widget' ) ) {
+	add_action( 'generate_before_footer', 'generate_before_footer_widget', 15 );
+	/**
+	 * Build our footer bar
+	 *
+	 * @since 1.3.42
+	 */
+	function generate_before_footer_widget() {
+		if ( ! is_active_sidebar( 'footer-bar' ) ) {
+			return;
+		}
+		?>
+		<div class="before-footer-widget-area grid-container">	
+			<?php dynamic_sidebar( 'before-footer' ); ?>
+		</div>
+		<?php
+	}
+}

@@ -141,6 +141,7 @@ if ( ! function_exists( 'generate_widgets_init' ) ) {
 			'sidebar-1' => __( 'Right Sidebar', 'generatepress' ),
 			'sidebar-2' => __( 'Left Sidebar', 'generatepress' ),
 			'header' => __( 'Header', 'generatepress' ),
+			'before-footer' => __( 'Before Footer', 'generatepress' ),
 			'footer-1' => __( 'Footer Widget 1', 'generatepress' ),
 			'footer-2' => __( 'Footer Widget 2', 'generatepress' ),
 			'footer-3' => __( 'Footer Widget 3', 'generatepress' ),
