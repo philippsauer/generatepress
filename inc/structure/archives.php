@@ -62,9 +62,9 @@ if ( ! function_exists( 'generate_filter_the_archive_title' ) ) {
 	 */
 	function generate_filter_the_archive_title( $title ) {
 		if ( is_category() ) {
-			$title = single_cat_title( '', false );
+			$title = single_cat_title( 'Alle Beiträge zum Urlaubsziel ', false );
 		} elseif ( is_tag() ) {
-			$title = single_tag_title( '', false );
+			$title = single_tag_title( 'Alle Beiträge zum Thema ', false );
 		} elseif ( is_author() ) {
 			/*
 			 * Queue the first post, that way we know
@@ -138,5 +138,43 @@ function generate_do_search_results_title( $template ) {
 				)
 			)
 		);
+	}
+}
+
+add_action( 'generate_after_header', 'eb_featured_archive_content' );
+/**
+ * Add the featured category content to the category page page.
+ *
+ */
+function eb_featured_archive_content() {
+	// Retrieve related page by tag slug
+	$query_var = get_query_var( 'cat' );
+
+	if ( $query_var ) {
+		$category = get_category($query_var );
+		$page = get_page_by_path( $category->slug );
+
+		// in case there is a content page for the current tag render it in the top area
+		if ( $page && $page->post_status == 'publish') {
+			echo '<div class="site grid-container featured-category-content-area">';
+			echo '<h2 class="entry-title">' . apply_filters('the_title', $page->post_title) . '</h2>';
+			echo apply_filters('the_content', $page->post_content); 
+			echo '</div>';
+		}
+
+	} else {
+		$query_var = get_query_var('tag');
+		
+		if ( $query_var ) {
+			$page = get_page_by_path( "/tag/".$query_var );
+	
+			// in case there is a content page for the current tag render it in the top area
+			if ( $page && $page->post_status == 'publish') {
+				echo '<div class="site grid-container featured-category-content-area">';
+				echo '<h2 class="entry-title">' . apply_filters('the_title', $page->post_title) . '</h2>';
+				echo apply_filters('the_content', $page->post_content); 
+				echo '</div>';
+			}
+		}
 	}
 }
