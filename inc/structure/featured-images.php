@@ -80,14 +80,16 @@ if ( ! function_exists( 'generate_featured_page_header_area' ) ) {
 			);
 		}
 		?>
-		<div class="featured-image <?php echo esc_attr( $class ); ?> grid-container grid-parent">
+
+		<!-- Never show Post Thumbnails -->
+		<!-- <div class="featured-image <?php //echo esc_attr( $class ); ?> grid-container grid-parent">
 			<?php
-				the_post_thumbnail(
-					apply_filters( 'generate_page_header_default_size', 'full' ),
-					$attrs
-				);
+				// the_post_thumbnail(
+				// 	apply_filters( 'generate_page_header_default_size', 'full' ),
+				// 	$attrs
+				// );
 			?>
-		</div>
+		</div> -->
 		<?php
 	}
 }
