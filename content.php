@@ -9,7 +9,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 ?>
-<article id="post-<?php the_ID(); ?>" <?php post_class(); ?> <?php generate_do_microdata( 'article' ); ?>>
+<article id="post-<?php the_ID(); ?>" <?php post_class( ['eb-grid-item'] ); ?> <?php generate_do_microdata( 'article' ); ?>>
 	<div class="inside-article">
 		<?php
 		/**
@@ -45,7 +45,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 				 *
 				 * @hooked generate_post_meta - 10
 				 */
-				do_action( 'generate_after_entry_title' );
+				//don't show meta infos on post grid items
+				//do_action( 'generate_after_entry_title' );
 				?>
 			</header>
 			<?php

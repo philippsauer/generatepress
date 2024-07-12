@@ -39,14 +39,23 @@ get_header(); ?>
 					 * @since 3.1.0
 					 */
 					do_action( 'generate_before_loop', 'archive' );
+					?>
 
-					while ( have_posts() ) :
+					<div class="archive-grid">
 
-						the_post();
+						<?php
+						while ( have_posts() ) :
 
-						generate_do_template_part( 'archive' );
+							the_post();
 
-					endwhile;
+							generate_do_template_part( 'archive' );
+
+						endwhile;
+						?>
+
+					</div>
+
+					<?php
 
 					/**
 					 * generate_after_loop hook.

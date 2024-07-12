@@ -178,3 +178,28 @@ function eb_featured_archive_content() {
 		}
 	}
 }
+
+/**
+ * Set page size to 18.
+ *
+ */
+add_action( 'pre_get_posts', 'eb_set_pagesize' );
+function eb_set_pagesize( $query ) {
+    if ( is_admin() || ! $query->is_main_query() )
+        return;
+
+	$query->set( 'posts_per_page', 18 );
+	return;
+}
+
+
+/**
+ * Filter the except length to 20 words.
+ *
+ * @param int $length Excerpt length.
+ * @return int (Maybe) modified excerpt length.
+ */
+function eb_excerpt_length( $length ) {
+	return 18;
+}
+add_filter( 'excerpt_length', 'eb_excerpt_length' );
