@@ -335,8 +335,6 @@ function generate_do_post_meta_item( $item ) {
 	}
 
 	if ( 'eb-author-bio' === $item ) {
-		$schema_type = generate_get_schema_type();
-
 		$byline = '<span class="byline">%1$s<span class="author%8$s" %5$s><a class="url fn n" href="%2$s" title="%3$s" rel="author"%6$s><span class="author-name"%7$s>%4$s</span></a></span></span> ';
 
 		if ( ! apply_filters( 'generate_post_author_link', true ) ) {
@@ -358,6 +356,16 @@ function generate_do_post_meta_item( $item ) {
 			</p>
 		</div>
 		<?php
+	}
+
+	if ( 'eb-affiliate-info' === $item ) {
+		echo apply_filters( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			'generate_category_tag_list_output',
+			sprintf(
+				'<span class="eb-affiliate-info">%1$s Enthält <abbr title="Im Beitrag verwenden wir ggf. sogenannte „Empfehlungslinks“ (Werbelinks). Diese leiten dich zu Produkten oder Dienstleistungen weiter, welche wir dir empfehlen können. Solltest du über diese Links etwas buchen, erhalten wir als Dankeschön eine kleine Provision. Dir entstehen dadurch keine zusäzlichen Kosten und wir können wir dir weiterhin all unsere Tipps und Erfahungsberichte kostenfrei anbieten.">Empfehlungslinks</abbr></span> ',
+				apply_filters( 'generate_inside_post_meta_item_output', '', 'eb-affiliate-info' )
+			)
+		);
 	}
 
 	/**
@@ -395,6 +403,10 @@ function generate_do_post_meta_prefix( $output, $item ) {
 
 	if ( 'comments-link' === $item ) {
 		$output = generate_get_svg_icon( 'comments' );
+	}
+
+	if ( 'eb-affiliate-info' === $item ) {
+		$output = generate_get_svg_icon( 'link' );
 	}
 
 	return $output;
@@ -447,6 +459,7 @@ function generate_get_header_entry_meta_items() {
 			'date-modified',
 			'author',
 			'categories',
+			'eb-affiliate-info',
 		)
 	);
 
